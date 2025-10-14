@@ -1,0 +1,45 @@
+create database icomprasprodutos;
+-- criando tabela produto
+create table produtos(
+                         codigo serial not null primary key,
+                         nome varchar(100) not null,
+                         valor_unitario numeric(16,2)
+);
+
+
+
+create database icomprasclientes;
+-- tabela cliente
+create table clientes(
+                        codigo serial not null primary key,
+                        nome varchar(150) not null,
+                        cpf char(11) not null,
+                        logradouro varchar(10),
+                        numero varchar(10),
+                        bairro varchar(100),
+                        email varchar(150),
+                        telefone varchar(20)
+);
+
+
+create database icompraspedidos;
+-- creando tabela pedido
+       create table pedidos(
+                        codigo serial not null primary key,
+                        codigo_cliente bigint not null,
+                        data_pedido timestamp not null default now(),
+                        chave_pagamento text,
+                        observacoes text,
+                        status varchar(20) check (status in ('REALIZADO','PAGO','FATURADO','CANCELADO','ENVIADO','ERRO_PAGAMENTO','PREPARANDO_ENVIO')),
+                        total decimal(16,2) not null
+                            codigo_rastreio varchar(255),
+                        url_nf text
+);
+-- criando tabela item pedido
+create table item_pedido(
+                            codigo serial not null primary key,
+                            codigo_pedido bigint not null references pedidos (codigo),
+                            codigo_produto bigint not null,
+                            quantidade int not null,
+                            valor_unitario decimal(16,2) not null
+);
