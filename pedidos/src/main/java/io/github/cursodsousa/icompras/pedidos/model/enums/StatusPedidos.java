@@ -1,4 +1,4 @@
-package io.github.cursodsousa.icompras.pedidos.model;
+package io.github.cursodsousa.icompras.pedidos.model.enums;
 
 public enum StatusPedidos {
     REALIZADO,
