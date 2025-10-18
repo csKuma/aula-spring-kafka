@@ -72,19 +72,7 @@ public class PedidoService {
                 });
     }
 
-    @Transactional
-    public void atualizarFaturamento(AtualizacaoPedido atualizacao) {
 
-        pedidoRepository.findById(atualizacao.codigo()).ifPresentOrElse(
-                pedido -> {
-                    pedido.setStatus(atualizacao.status());
-                    pedido.setUrlNf(atualizacao.urlNotaFiscal());
-                },
-                () -> {
-                    var msg = String.format("Pedido não encontrato com o codigo %s ", atualizacao.codigo());
-                    log.error(msg);
-                });
-    }
 
     private void prepararEPublicarPedidoPago(Pedido pedido) {
         pedido.setStatus(StatusPedidos.PAGO);
