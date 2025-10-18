@@ -12,6 +12,7 @@ import io.github.cursodsousa.icompras.pedidos.model.enums.TipoPagamento;
 import io.github.cursodsousa.icompras.pedidos.publisher.PagamentoPublisher;
 import io.github.cursodsousa.icompras.pedidos.repository.ItemPedidoRepository;
 import io.github.cursodsousa.icompras.pedidos.repository.PedidoRepository;
+import io.github.cursodsousa.icompras.pedidos.subscriber.representation.AtualizacaoPedido;
 import io.github.cursodsousa.icompras.pedidos.validator.PedidoValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,20 @@ public class PedidoService {
                 },
                 () -> {
                     var msg = String.format("Pedido não encontrato com o codigo %s e chave pagamento %s", codigo, chavePagamento);
+                    log.error(msg);
+                });
+    }
+
+    @Transactional
+    public void atualizarFaturamento(AtualizacaoPedido atualizacao) {
+
+        pedidoRepository.findById(atualizacao.codigo()).ifPresentOrElse(
+                pedido -> {
+                    pedido.setStatus(atualizacao.status());
+                    pedido.setUrlNf(atualizacao.urlNotaFiscal());
+                },
+                () -> {
+                    var msg = String.format("Pedido não encontrato com o codigo %s ", atualizacao.codigo());
                     log.error(msg);
                 });
     }
