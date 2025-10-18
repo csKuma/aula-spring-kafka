@@ -19,4 +19,9 @@ public class ClienteService {
     public Optional<Cliente> buscarPorCodigo(Long codigo) {
         return clienteRepository.findById(codigo);
     }
+
+    public void excluir(Cliente cliente) {
+        cliente.setAtivo(false);
+        clienteRepository.save(cliente);
+    }
 }

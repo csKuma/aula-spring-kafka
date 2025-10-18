@@ -19,4 +19,9 @@ public class ProdutoService {
     public Optional<Produto> obterPorCodigo(Long codigo) {
         return produtoRepository.findById(codigo);
     }
+
+    public void excluir(Produto produto) {
+        produto.setAtivo(false);
+        produtoRepository.save(produto);
+    }
 }

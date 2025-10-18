@@ -35,7 +35,11 @@ public class PedidoValidator {
     private void validarCliente(Long codigoCliente) {
         try {
             ResponseEntity<ClientRepresentation> obter = clientesClient.obter(codigoCliente);
-            obter.getBody();
+            ClientRepresentation clienteRepresentation = obter.getBody();
+            if (!clienteRepresentation.ativo()){
+                var mensagem = String.format("Cliente de codigo %d  está inativo", codigoCliente);
+                throw new ValidationException("codigoCliente", mensagem.toString());
+            }
         } catch (FeignException.NotFound e) {
             var mensagem = String.format("Cliente de codigo %d não encontrado", codigoCliente);
             throw new ValidationException("codigoCliente", mensagem.toString());
@@ -46,7 +50,11 @@ public class PedidoValidator {
     private void validarProduto(ItemPedido itemPedido) {
         try {
             ResponseEntity<ProdutoRepresentation> produto = produtosClient.obterDadosProduto(itemPedido.getCodigoProduto());
-            produto.getBody();
+            ProdutoRepresentation body = produto.getBody();
+            if (!body.ativo()) {
+                var mensagem = String.format("Produto de codigo %d não está mais ativo", itemPedido.getCodigoProduto());
+                throw new ValidationException("codigoProduto", mensagem.toString());
+            }
         } catch (FeignException.NotFound e) {
             var mensagem = String.format("Produto de codigo %d não encontrado", itemPedido.getCodigoProduto());
             throw new ValidationException("codigoProduto", mensagem.toString());
